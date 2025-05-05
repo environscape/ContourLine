@@ -1,65 +1,56 @@
-## ContourLine 
-__Arduino DCO__  
-__The Eurorack modular is based on the Arduino-Mozzi library__
+# ContourLine Arduino DCO
+The Eurorack modular is based on the Arduino-Mozzi library.
 
-`Welcome!` 这是一个开源的Eurorack数字振荡器 基于`arduino nano控制器`和`mozzi库`实现  
-可以通过上下按钮来切换当前旋钮可调节的功能与参数列表  
-当前功能通过8位数显来显示 当旋钮拧到旧的参数附近 才可以解锁当前参数的修改 数码管的亮度增加则表示已解锁当前参数  
-gerber/bom文件与清单已经提供 如果不了解如何下单pcb板 可以到b站搜索ciiyte的教程了解如何去诸如嘉立创等厂商定制pcb板。  
-画面展示  
-焊接环节由于都是贴片元件 可能需要你有插件焊接的基础 使用镊子和电烙铁/焊台来完成  
-程序烧录教程 mozzi library依赖说明 视频演示  
-<img src="Hardware/img/面板效果图2.jpg" height=400 width=200>
+## 简介
+欢迎使用ContourLine，这是一款开源的Eurorack数字振荡器。该振荡器基于**Arduino Nano控制器**与**Mozzi库**开发，通过简洁的硬件设计与丰富的软件功能，实现多样化的音频合成效果。
 
-### 模块参数:
-电源插口: 10p  
-+12v: 约25mA  
--12v: 约5mA  
-宽度: 4HP  
-深度: 30mm  
-操作:  
-1x Knob  
-2x Button  
-1x 8bitLed  
-接口:  
-1x VOCT In  
-3xC V In  
-1x Gate In  
-1x Audio Out  
+用户可通过两个按钮切换旋钮调节功能与参数列表，并借助8位数码管实时显示当前设置。参数修改采用"接近解锁"机制：当旋钮调节至目标参数附近时，数码管亮度提升，即表示该参数已解锁可编辑状态。
 
-### 硬件设计说明：
-使用arduino nano控制器，它可以直接读取0-5v的输入值，并且多达8个adc输入，符合一部分eurorack cv信号的范围而无需额外电路进行放大 使得pcb只需要一块主板和比较少的元件，就可以得到整个模块的主体  
-设计使用按钮切换 单电位器一一调整参数 8位数显显示参数 可能使模块看起来不太像个电子乐器，更像一个工具插件，但是如果想要加入更多的参数与调制内容，也是完全兼容的，具有可拓展性  
-不同的cv输入信号可以有多种电路结构来尽可能还原，比如对于低频控制信号、音频信号、voct信号、门信号等的电路设计就会有所不同
+项目已提供完整的Gerber文件、BOM清单及物料列表。若需定制PCB板，可参考B站用户ciiyte发布的教程，通过嘉立创等厂商完成制作。
 
-### 现有程序实现:
-[Avr-wt-synth故障振荡器](Software/Avr-wt-synth/readme.md "Software/Avr-wt-synth/")  
-[虚拟模拟振荡器](Software/AnalogWave/readme.md "Software/AnalogWave/")  
-[可调制打击乐发生器](Software/DrumVoltrixion/readme.md "Software/DrumVoltrixion/")  
-[和弦/加法/FM振荡器](Software/FmAddChordDCO/readme.md "Software/FmAddChordDCO/")  
-[2算子FM振荡器`(入门)`](Software/FmDCO/readme.md "Software/FmDCO/")  
-[波型渐变2算子FM振荡器 `(推荐)`](Software/FmWsWtDCO/readme.md "Software/FmWsWtDCO/")  
-[波型渐变2算子FM振荡器`(lofi版)`](Software/FmWsWtDCOfor168p/readme.md "Software/FmWsWtDCOfor168p/")  
-[4组打击乐发生器](Software/FourTrekPerc/readme.md "Software/FourTrekPerc/")  
-[粒子合成器](Software/Granular/readme.md "Software/Granular/")  
-[和谐音程振荡器](Software/HarmonicOSC/readme.md "Software/HarmonicOSC/")  
-[风噪音发生器](Software/NoiseWindy/readme.md "Software/NoiseWindy/")  
-[采样器`(4K)`](Software/Sampler/readme.md "Software/Sampler/")  
-[失谐振荡器](Software/Swarmduino/readme.md "Software/Swarmduino/")  
-[更多>>](https://github.com/lechenghhh/ContourLine/tree/master/Software "https://github.com/lechenghhh/ContourLine/tree/master/Software")
+![面板效果图2](Hardware/img/面板效果图2.jpg)
 
-### 程序拓展说明：
-程序依赖于`mozzi library` 强大的声音合成库
-arduino nano控制器没有dac模块 是如何输出较高质量的音频的? 原理就是使用pwm+rc电路 跟据奈奎斯特采样定理只要采样速率足够高也是可以的  
-主程序代码结构介绍:(以[波型渐变2算子FM振荡器](Software/FmWsWtDCO/readme.md "Software/FmWsWtDCO/readme.md")为例)  
+## 模块参数
+| 项目         | 参数规格                     |
+|--------------|----------------------------|
+| 电源接口      | 10针连接器                  |
+| +12V功耗      | 约25mA                     |
+| -12V功耗      | 约5mA                      |
+| Eurorack规格  | 4HP宽度，30mm深度           |
+| 操作部件      | 1个旋钮，2个按钮，1个8位数码管 |
+| 信号接口      | 1x VOCT输入，3x CV输入，1x Gate输入，1x 音频输出 |
 
-    1.setup方法 这里主要用来启动控制引脚绑定 led引脚绑定 mozzi启动
-    2.updateControl方法
-    这里主要用于获取当前的控制信息 如当前菜单 当前旋钮参数 当前按钮状态 当前菜单对应的参数 cv参数等
-    然后对以上信息做处理和计算 得到基本的合成参数
-    3.updateAudio方法
-    这里进行最终的合成算法 最终输出成pwm音频 注意：这里是实时音频请不要做复杂控制运算!
-    4.loop方法 执行mozzi的audioHook方法 注意:这里不要进行修改!
+## 硬件设计
+1. **核心控制**：采用Arduino Nano控制器，内置8路ADC输入通道，可直接兼容Eurorack标准的0-5V控制信号，无需额外放大电路，大幅简化PCB设计。
+2. **交互设计**：通过按钮切换菜单、单旋钮调整参数、数码管显示状态的设计方案，在保持硬件简洁性的同时，具备良好的功能扩展性，支持未来参数与调制功能的升级。
+3. **信号处理**：针对不同类型的CV信号（低频控制、音频、VOCT、门控信号等），采用差异化电路设计，确保信号处理的准确性与稳定性。
 
+## 现有程序实现
+项目已开发多种音频合成算法，涵盖振荡器、打击乐发生器、采样器等功能模块，具体包括：
+- [Avr-wt-synth故障振荡器](Software/Avr-wt-synth/readme.md)
+- [虚拟模拟振荡器](Software/AnalogWave/readme.md)
+- [可调制打击乐发生器](Software/DrumVoltrixion/readme.md)
+- [和弦/加法/FM振荡器](Software/FmAddChordDCO/readme.md)
+- [2算子FM振荡器（入门）](Software/FmDCO/readme.md)
+- [波型渐变2算子FM振荡器（推荐）](Software/FmWsWtDCO/readme.md)
+- [波型渐变2算子FM振荡器（lofi版）](Software/FmWsWtDCOfor168p/readme.md)
+- [4组打击乐发生器](Software/FourTrekPerc/readme.md)
+- [粒子合成器](Software/Granular/readme.md)
+- [和谐音程振荡器](Software/HarmonicOSC/readme.md)
+- [风噪音发生器](Software/NoiseWindy/readme.md)
+- [4K采样器](Software/Sampler/readme.md)
+- [失谐振荡器](Software/Swarmduino/readme.md)
 
-<a href="https://github.com/lechenghhh/ContourLine/issues">与我讨论问题, 或增加更多创意>></a>
+更多程序详见：[软件仓库](https://github.com/lechenghhh/ContourLine/tree/master/Software)
+
+## 程序拓展说明
+### 技术原理
+本项目基于**Mozzi库**开发。Arduino Nano虽无内置DAC模块，但通过PWM（脉宽调制）结合RC滤波电路，依据奈奎斯特采样定理，在高采样率下实现高质量音频输出。
+
+### 主程序结构（以波型渐变2算子FM振荡器为例）
+1. **setup()**：初始化控制引脚、数码管引脚配置，启动Mozzi库运行环境。
+2. **updateControl()**：实时获取菜单状态、旋钮参数、按钮输入及CV信号数据，经运算生成音频合成基础参数。
+3. **updateAudio()**：执行核心音频合成算法，输出PWM格式音频信号。该函数为实时音频处理模块，严禁包含复杂控制逻辑。
+4. **loop()**：调用Mozzi库的`audioHook()`函数，请勿修改此部分代码以确保音频处理的实时性。
+
+如需技术讨论或功能建议，欢迎访问：[项目讨论区](https://github.com/environscape/ContourLine/issues) 
